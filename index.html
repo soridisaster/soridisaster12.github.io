@@ -10,6 +10,16 @@
   	<html lang="ru">
 </head>
 <body>
+	<div class="cont">
+        <div class="request">
+            <select id="city">
+                <option value="Moscow">Moscow</option>
+                <option value="Saratov">Saratov</option>
+
+            </select>
+        </div>
+        <div id="weather"></div>
+    </div>
 	
 	
 
@@ -193,6 +203,24 @@
 	
 
 	<script type="text/javascript">
+		const apiKey = "6b410f870cd74406df33e61ed4961809";
+
+        const container = document.querySelector('#weather');
+
+        document.querySelector('#city').addEventListener('change', function () {
+          const selectedCity = this.value;
+          const requestGetParams = `q=${encodeURIComponent(selectedCity)}&units=metric&appid=${apiKey}`;
+          const requestUrl = `https://api.openweathermap.org/data/2.5/weather?${requestGetParams}`;
+
+          fetch(requestUrl).then(
+            res => res.json()
+          ).then(response => {
+            const weatherDescriptions = response.weather.map(item => item.description);
+            container.innerHTML = `<div><b>Main</b>: ${response.main.temp}</div>`  + `<div><b>Description</b>: ${weatherDescriptions.join(', ')}</div>`;
+          });
+        });
+        
+        document.querySelector('#city').dispatchEvent(new Event('change'));
 		function summary() {
   let count = document.getElementsByClassName('question').length; //Количество вопросов
   let answers = document.querySelectorAll('.question'); 
